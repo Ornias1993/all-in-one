@@ -37,6 +37,12 @@ if [ "$BORG_MODE" != backup ] && [ "$BORG_MODE" != test ] && ! [ -f "$BORG_BACKU
     exit 1
 fi
 
+# Do not continue if this file exists (needed for simple external blocking)
+if [ -f "$BORG_BACKUP_DIRECTORY/aio-lockfile" ]; then
+    echo "Not continuing because aio-lockfile exists."
+    exit 1
+fi
+
 # Create lockfile
 if [ "$BORG_MODE" = backup ] || [ "$BORG_MODE" = restore ]; then
     touch "/nextcloud_aio_volumes/nextcloud_aio_database_dump/backup-is-running"
